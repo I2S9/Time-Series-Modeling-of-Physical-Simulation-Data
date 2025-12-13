@@ -6,6 +6,7 @@ from src.models.baselines import (
     LinearRegressionModel,
 )
 from src.models.autoencoder import Autoencoder, DeepAutoencoder
+from src.models.lstm import LSTMModel, BidirectionalLSTMModel
 
 __all__ = [
     "PersistenceModel",
@@ -13,5 +14,7 @@ __all__ = [
     "LinearRegressionModel",
     "Autoencoder",
     "DeepAutoencoder",
+    "LSTMModel",
+    "BidirectionalLSTMModel",
 ]
 
