@@ -5,10 +5,13 @@ from src.models.baselines import (
     MovingAverageModel,
     LinearRegressionModel,
 )
+from src.models.autoencoder import Autoencoder, DeepAutoencoder
 
 __all__ = [
     "PersistenceModel",
     "MovingAverageModel",
     "LinearRegressionModel",
+    "Autoencoder",
+    "DeepAutoencoder",
 ]
 
