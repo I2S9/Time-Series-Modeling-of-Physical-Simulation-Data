@@ -1,0 +1,26 @@
+{
+  "has_velocity": true,
+  "has_acceleration": false,
+  "has_speed": true,
+  "has_distance": true,
+  "normalization": "zscore",
+  "normalization_params": {
+    "mean": [
+      0.00040723646449666737,
+      -0.00021367690765571935,
+      0.12549679004999517,
+      13.294851636181308
+    ],
+    "std": [
+      0.10060065492911255,
+      0.09957790299862357,
+      0.06547532149043667,
+      7.988514509734249
+    ]
+  },
+  "feature_shape": [
+    49999,
+    4
+  ],
+  "n_features": 4
+}
