@@ -1,0 +1,77 @@
+# Cursor IDE configuration
+.cursorrules
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# Environment variables
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data directories (uncomment if you want to ignore data)
+# data/raw/
+# data/processed/
+
+# Model checkpoints and outputs
+*.pkl
+*.h5
+*.ckpt
+*.pt
+*.pth
+checkpoints/
+models/saved/
+
+# Logs
+*.log
+logs/
+
+# Reports (uncomment if you want to ignore generated reports)
+# reports/figures/
+# reports/tables/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
