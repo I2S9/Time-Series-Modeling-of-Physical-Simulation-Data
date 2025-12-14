@@ -24,7 +24,7 @@ def load_json(file_path: Path) -> Dict:
 
 
 def create_comparison_plot(results: Dict, output_path: Path, robustness_results: Dict = None) -> None:
-    """Create comparison plot of all models across horizons with error bars if available."""
+    """Create comparison plot of all models across horizons using bar charts for clarity."""
     horizons = sorted(
         [int(h.split("_")[1]) for h in results.keys() if h.startswith("horizon_")]
     )
@@ -43,13 +43,13 @@ def create_comparison_plot(results: Dict, output_path: Path, robustness_results:
         "lstm": "#96CEB4",
     }
     
-    fig, axes = plt.subplots(1, 2, figsize=(16, 6))
+    fig, ax = plt.subplots(figsize=(12, 6))
     
-    for model_name in model_names:
+    x = np.arange(len(horizons))
+    width = 0.2
+    
+    for idx, model_name in enumerate(model_names):
         rmse_values = []
-        mse_values = []
-        rmse_stds = []
-        mse_stds = []
         
         for horizon in horizons:
             key = f"horizon_{horizon}"
@@ -57,92 +57,33 @@ def create_comparison_plot(results: Dict, output_path: Path, robustness_results:
                 metrics = results[key][model_name]
                 if metrics["rmse"] != float("inf"):
                     rmse_values.append(metrics["rmse"])
-                    mse_values.append(metrics["mse"])
-                    
-                    if robustness_results:
-                        stability_key = f"{horizon}_{model_name}"
-                        if stability_key in robustness_results.get("stability_summary", {}):
-                            stability = robustness_results["stability_summary"][stability_key]
-                            rmse_stds.append(stability.get("std", 0))
-                            mse_stds.append(stability.get("std", 0) ** 2)
-                        else:
-                            rmse_stds.append(0)
-                            mse_stds.append(0)
-                    else:
-                        rmse_stds.append(0)
-                        mse_stds.append(0)
                 else:
-                    rmse_values.append(np.nan)
-                    mse_values.append(np.nan)
-                    rmse_stds.append(0)
-                    mse_stds.append(0)
+                    rmse_values.append(0)
             else:
-                rmse_values.append(np.nan)
-                mse_values.append(np.nan)
-                rmse_stds.append(0)
-                mse_stds.append(0)
+                rmse_values.append(0)
         
-        if any(rmse_stds):
-            axes[0].errorbar(
-                horizons,
-                rmse_values,
-                yerr=rmse_stds,
-                marker="o",
-                label=model_labels[model_name],
-                linewidth=2.5,
-                markersize=8,
-                color=colors[model_name],
-                capsize=4,
-                capthick=2,
-            )
-            axes[1].errorbar(
-                horizons,
-                mse_values,
-                yerr=mse_stds,
-                marker="s",
-                label=model_labels[model_name],
-                linewidth=2.5,
-                markersize=8,
-                color=colors[model_name],
-                capsize=4,
-                capthick=2,
-            )
-        else:
-            axes[0].plot(
-                horizons,
-                rmse_values,
-                marker="o",
-                label=model_labels[model_name],
-                linewidth=2.5,
-                markersize=8,
-                color=colors[model_name],
-            )
-            axes[1].plot(
-                horizons,
-                mse_values,
-                marker="s",
-                label=model_labels[model_name],
-                linewidth=2.5,
-                markersize=8,
-                color=colors[model_name],
-            )
+        offset = (idx - len(model_names) / 2) * width + width / 2
+        ax.bar(
+            x + offset,
+            rmse_values,
+            width,
+            label=model_labels[model_name],
+            color=colors[model_name],
+            alpha=0.8,
+            edgecolor="black",
+            linewidth=0.5,
+        )
     
-    axes[0].set_xlabel("Forecast Horizon", fontsize=14, fontweight="bold")
-    axes[0].set_ylabel("RMSE", fontsize=14, fontweight="bold")
-    axes[0].set_title("RMSE Comparison Across Forecast Horizons", fontsize=16, fontweight="bold")
-    axes[0].legend(fontsize=12, loc="best")
-    axes[0].grid(True, alpha=0.3, linestyle="--")
-    axes[0].set_xticks(horizons)
-    
-    axes[1].set_xlabel("Forecast Horizon", fontsize=14, fontweight="bold")
-    axes[1].set_ylabel("MSE", fontsize=14, fontweight="bold")
-    axes[1].set_title("MSE Comparison Across Forecast Horizons", fontsize=16, fontweight="bold")
-    axes[1].legend(fontsize=12, loc="best")
-    axes[1].grid(True, alpha=0.3, linestyle="--")
-    axes[1].set_xticks(horizons)
+    ax.set_xlabel("Forecast Horizon", fontsize=12, fontweight="bold")
+    ax.set_ylabel("RMSE", fontsize=12, fontweight="bold")
+    ax.set_title("RMSE Comparison Across Forecast Horizons", fontsize=14, fontweight="bold")
+    ax.set_xticks(x)
+    ax.set_xticklabels([f"H={h}" for h in horizons])
+    ax.legend(fontsize=10, loc="upper left")
+    ax.grid(True, alpha=0.3, linestyle="--", axis="y")
     
     plt.tight_layout()
-    plt.savefig(output_path, dpi=300, bbox_inches="tight")
+    plt.savefig(output_path, dpi=300, bbox_inches="tight", facecolor="white")
     plt.close()
     print(f"Saved comparison plot to {output_path}")
 

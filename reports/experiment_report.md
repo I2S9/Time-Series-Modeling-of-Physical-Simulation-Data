@@ -10,12 +10,12 @@ This report presents the results of time series forecasting experiments on Brown
 ### RMSE by Model and Forecast Horizon
 
 
-| Model | H=1 | H=5 | H=10 |
-|-------|-------|-------|-------|
-| Persistence | 1.0735 | 1.0736 | 1.0738 |
-| Moving Average | 0.9060 | 0.9067 | 0.9066 |
-| Linear Regression | 0.8625 | 0.8625 | 0.8625 |
-| LSTM | 0.8651 | 0.8644 | 0.8643 |
+| Model | H=1 | H=5 | H=10 | H=20 | H=50 |
+|-------|-------|-------|-------|-------|-------|
+| Persistence | 1.0735 | 1.0736 | 1.0738 | 1.0739 | 1.0741 |
+| Moving Average | 0.9060 | 0.9067 | 0.9066 | 0.9066 | 0.9058 |
+| Linear Regression | 0.8625 | 0.8625 | 0.8625 | 0.8626 | 0.8629 |
+| LSTM | 0.8651 | 0.8644 | 0.8643 | 0.8647 | 0.8667 |
 
 ### Baseline Models Performance
 
@@ -25,9 +25,9 @@ This report presents the results of time series forecasting experiments on Brown
 
 ### Deep Learning Models Performance
 
-- **LSTM**: RMSE = 1.1843
-  - MSE = 1.4026
-  - MAE = 0.8425
+- **LSTM**: RMSE = 0.8651
+  - MSE = 0.7483
+  - MAE = 0.6057
 - **Autoencoder**: Reconstruction RMSE = 0.7861
   - Reconstruction MSE = 0.6179
 

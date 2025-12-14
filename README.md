@@ -26,6 +26,10 @@ Raw position trajectories are transformed into features:
 
 Features are normalized using z-score normalization to ensure comparable scales.
 
+![Error Analysis](reports/error_by_horizon.png)
+
+*Error analysis showing how prediction errors evolve across different forecast horizons for each model.*
+
 ### Model Selection
 
 We evaluate four model classes representing different complexity levels:
@@ -91,6 +95,10 @@ python scripts/generate_report.py
 
 ### Model Performance
 
+![Performance Summary](reports/performance_table.png)
+
+*Performance summary table showing RMSE and MSE across different forecast horizons for all models.*
+
 | Model | H=1 | H=5 | H=10 |
 |-------|-----|-----|------|
 | Persistence | 1.0735 | 1.0736 | 1.0738 |
@@ -109,7 +117,13 @@ python scripts/generate_report.py
 
 ![Model Comparison](reports/comparison_plot.png)
 
-*RMSE and MSE comparison across forecast horizons. Linear Regression and LSTM show similar performance, both outperforming simpler baselines.*
+*RMSE comparison across forecast horizons using grouped bar charts. Linear Regression and LSTM show similar performance, both outperforming simpler baselines.*
+
+### Training Dynamics
+
+![Training History](reports/training_history.png)
+
+*Training and validation loss curves for Autoencoder and LSTM models. Both models show stable convergence with minimal overfitting.*
 
 ### Critical Analysis of Results
 
