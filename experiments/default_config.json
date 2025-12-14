@@ -1,0 +1,60 @@
+{
+  "data_generation": {
+    "n_steps": 50000,
+    "noise_level": 0.1,
+    "n_particles": 1,
+    "dimension": 2,
+    "seed": 42,
+    "output_name": "brownian_trajectories"
+  },
+  "preprocessing": {
+    "include_velocity": true,
+    "include_acceleration": false,
+    "include_speed": true,
+    "include_distance": true,
+    "normalize": true,
+    "normalization_method": "zscore",
+    "output_name": "processed_trajectories"
+  },
+  "training": {
+    "train_split": 0.7,
+    "val_split": 0.15,
+    "seed": 42
+  },
+  "baselines": {
+    "window_size": 10,
+    "lookback_window": 10,
+    "horizon": 1
+  },
+  "autoencoder": {
+    "latent_dim": 2,
+    "batch_size": 32,
+    "learning_rate": 0.001,
+    "n_epochs": 100,
+    "deep": false
+  },
+  "lstm": {
+    "hidden_dim": 64,
+    "num_layers": 1,
+    "seq_len": 10,
+    "batch_size": 32,
+    "learning_rate": 0.0005,
+    "n_epochs": 30
+  },
+  "evaluation": {
+    "horizons": [1, 5, 10],
+    "generate_plots": true
+  },
+  "robustness": {
+    "enabled": false,
+    "noise_levels": [0.05, 0.1, 0.15, 0.2],
+    "seeds": [42, 123, 456],
+    "n_steps": 20000,
+    "n_epochs": 20
+  },
+  "failure_analysis": {
+    "enabled": false,
+    "horizons": [1, 2, 5, 10, 20]
+  }
+}
+
