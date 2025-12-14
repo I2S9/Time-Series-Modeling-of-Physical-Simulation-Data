@@ -232,6 +232,12 @@ def main():
             "scripts/generate_results_table.py",
         ]
         success = run_command(cmd, "Results Table Generation") and success
+        
+        cmd = [
+            "python",
+            "scripts/generate_report.py",
+        ]
+        success = run_command(cmd, "Comprehensive Report Generation") and success
     
     if "robustness" in steps_to_run:
         robust_config = config["robustness"]
@@ -256,6 +262,13 @@ def main():
             "--horizons",
         ] + [str(h) for h in horizons]
         success = run_command(cmd, "Failure Analysis") and success
+    
+    if "report" in steps_to_run:
+        cmd = [
+            "python",
+            "scripts/generate_report.py",
+        ]
+        success = run_command(cmd, "Comprehensive Report Generation") and success
     
     print(f"\n{'='*70}")
     if success:
