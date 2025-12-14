@@ -23,8 +23,8 @@ def load_json(file_path: Path) -> Dict:
         return json.load(f)
 
 
-def create_comparison_plot(results: Dict, output_path: Path) -> None:
-    """Create comparison plot of all models across horizons."""
+def create_comparison_plot(results: Dict, output_path: Path, robustness_results: Dict = None) -> None:
+    """Create comparison plot of all models across horizons with error bars if available."""
     horizons = sorted(
         [int(h.split("_")[1]) for h in results.keys() if h.startswith("horizon_")]
     )
@@ -48,6 +48,8 @@ def create_comparison_plot(results: Dict, output_path: Path) -> None:
     for model_name in model_names:
         rmse_values = []
         mse_values = []
+        rmse_stds = []
+        mse_stds = []
         
         for horizon in horizons:
             key = f"horizon_{horizon}"
@@ -56,31 +58,74 @@ def create_comparison_plot(results: Dict, output_path: Path) -> None:
                 if metrics["rmse"] != float("inf"):
                     rmse_values.append(metrics["rmse"])
                     mse_values.append(metrics["mse"])
+                    
+                    if robustness_results:
+                        stability_key = f"{horizon}_{model_name}"
+                        if stability_key in robustness_results.get("stability_summary", {}):
+                            stability = robustness_results["stability_summary"][stability_key]
+                            rmse_stds.append(stability.get("std", 0))
+                            mse_stds.append(stability.get("std", 0) ** 2)
+                        else:
+                            rmse_stds.append(0)
+                            mse_stds.append(0)
+                    else:
+                        rmse_stds.append(0)
+                        mse_stds.append(0)
                 else:
                     rmse_values.append(np.nan)
                     mse_values.append(np.nan)
+                    rmse_stds.append(0)
+                    mse_stds.append(0)
             else:
                 rmse_values.append(np.nan)
                 mse_values.append(np.nan)
+                rmse_stds.append(0)
+                mse_stds.append(0)
         
-        axes[0].plot(
-            horizons,
-            rmse_values,
-            marker="o",
-            label=model_labels[model_name],
-            linewidth=2.5,
-            markersize=8,
-            color=colors[model_name],
-        )
-        axes[1].plot(
-            horizons,
-            mse_values,
-            marker="s",
-            label=model_labels[model_name],
-            linewidth=2.5,
-            markersize=8,
-            color=colors[model_name],
-        )
+        if any(rmse_stds):
+            axes[0].errorbar(
+                horizons,
+                rmse_values,
+                yerr=rmse_stds,
+                marker="o",
+                label=model_labels[model_name],
+                linewidth=2.5,
+                markersize=8,
+                color=colors[model_name],
+                capsize=4,
+                capthick=2,
+            )
+            axes[1].errorbar(
+                horizons,
+                mse_values,
+                yerr=mse_stds,
+                marker="s",
+                label=model_labels[model_name],
+                linewidth=2.5,
+                markersize=8,
+                color=colors[model_name],
+                capsize=4,
+                capthick=2,
+            )
+        else:
+            axes[0].plot(
+                horizons,
+                rmse_values,
+                marker="o",
+                label=model_labels[model_name],
+                linewidth=2.5,
+                markersize=8,
+                color=colors[model_name],
+            )
+            axes[1].plot(
+                horizons,
+                mse_values,
+                marker="s",
+                label=model_labels[model_name],
+                linewidth=2.5,
+                markersize=8,
+                color=colors[model_name],
+            )
     
     axes[0].set_xlabel("Forecast Horizon", fontsize=14, fontweight="bold")
     axes[0].set_ylabel("RMSE", fontsize=14, fontweight="bold")
@@ -364,6 +409,7 @@ def main():
         create_comparison_plot(
             systematic_results.get("results", {}),
             args.output_dir / "comparison_plot.png",
+            robustness_results,
         )
         create_performance_summary_table(
             systematic_results.get("results", {}),

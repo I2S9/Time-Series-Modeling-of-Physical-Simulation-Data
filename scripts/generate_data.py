@@ -69,6 +69,18 @@ def main():
         default="brownian_trajectories",
         help="Base name for output files (default: brownian_trajectories)",
     )
+    parser.add_argument(
+        "--drift",
+        type=float,
+        nargs="+",
+        default=None,
+        help="Drift vector components (default: None, no drift)",
+    )
+    parser.add_argument(
+        "--nonlinear-interaction",
+        action="store_true",
+        help="Enable weak nonlinear interactions between particles",
+    )
     
     args = parser.parse_args()
     
@@ -81,11 +93,19 @@ def main():
     print(f"  Dimension: {args.dimension}")
     print(f"  Seed: {args.seed}")
     
+    drift = None
+    if args.drift is not None:
+        drift = np.array(args.drift)
+        if len(drift) != args.dimension:
+            raise ValueError(f"Drift must have {args.dimension} components, got {len(drift)}")
+    
     trajectories = simulate_trajectories(
         n_steps=args.n_steps,
         noise_level=args.noise_level,
         n_particles=args.n_particles,
         dimension=args.dimension,
+        drift=drift,
+        nonlinear_interaction=args.nonlinear_interaction,
     )
     
     args.output_dir.mkdir(parents=True, exist_ok=True)

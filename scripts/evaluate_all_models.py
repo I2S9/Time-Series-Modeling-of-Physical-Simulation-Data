@@ -88,7 +88,10 @@ def evaluate_baseline_model(
         y_true = test_data[i + 1 : i + 1 + horizon]
         
         try:
-            y_pred = model.predict(X, horizon=horizon)
+            if horizon > 1:
+                y_pred = model.predict(X, horizon=horizon)
+            else:
+                y_pred = model.predict(X, horizon=1)
             predictions.append(y_pred)
             true_values.append(y_true)
         except (ValueError, IndexError):

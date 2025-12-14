@@ -32,6 +32,9 @@ class PersistenceModel:
     def predict(self, X: np.ndarray, horizon: int = 1) -> np.ndarray:
         """Predict future values using persistence.
         
+        For multi-step forecasting, uses autoregressive approach where each
+        prediction uses the previous prediction as input, accumulating error.
+        
         Args:
             X: Input features with shape (n_samples, n_features).
             horizon: Number of steps ahead to predict.
